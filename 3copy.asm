@@ -32,23 +32,43 @@ copy:
     call analize_pirmo_baito       
 
     JMP copy           
+	
 loopne_print:
 	lea dx, kom_loopne
 	call bin_to_hex
 	;grizimas i loopa
+
 loop_print:
 	lea dx, kom_loop
 	call bin_to_hex
 	;grizimas i loopa
+
 loope_print:
 	lea dx, kom_loope
 	call bin_to_hex
 	;grizimas i loopa
+pop_1:
+	call mod_nustatymas
+	
 pop_2:
 	call reg_nustatymas
+
 pop_3:
 	call sreg_nustatymas
-lds_print:
+lds_1:
+	call mod_nustatymas
+lea_1:
+	call mod_nustatymas
+and_1:
+
+and_2:
+
+and_3:
+
+dec_1:
+
+dec_2:
+
 	
 	
 	
@@ -58,6 +78,7 @@ exit:
     int 21h
 	
 analize_pirmo_baito PROC
+;base case, kad griztu i loopa
 loop_:
 	mov al, buff[si]
 	cmp al, 11100000b
@@ -65,37 +86,47 @@ loop_:
 	cmp al, 11100001b
 	JE loope_print
 	cmp al, 11100010b
-	JE loop_print
+	JE loop_print    ;done, tik poslinkis
 pop_:
 	mov al, buff[si]
 	and al, 11111000b
-	cmp al, 01011000b ;pop2
+	cmp al, 01011000b ;pop2 done tik reg nustatymas
 	JE pop_2
 	
 	mov al, buff[si]
-	and al, 11110000b
-	
-	cmp al, 10000000b ;pop1 or and2 or lea
-	JE
-	and al, 11100000b
-	cmp al, 00000000b ;pop3
+	cmp al, 10001111b ;pop1
+	JE pop_1 ;done tik mod ir rm
+	 
+	and al, 11100111b
+	cmp al, 00000111b ;pop3 done tik sreg
 	JE pop_3
 and_:
 	mov al, buff[si]
-	and al, 11110000b
-	cmp al, 00100000b ;and1 or and3
-	JE
+	and al, 11111100b
+
+	cmp al, 00100000b ;and 1 done tik dw mod reg rm ir poslinkis
+	JE and_1		
+
+	cmp al, 10000000b ;and 2 done ,tik sw mod r/m poslinkis betarpiai operandai
+	JE and_2
+	
+	and al, 11111110b
+	cmp al, 00100100b; and 3 done, tik w betoperandas, betarpis operandas2 jei w =1
+	JE and_3
 lds_:
 	mov al, buff[si]
-	cmp al, 11000101b
-	JE lds_print
+	cmp al, 11000101b ;done, tik mod reg r/m
+	JE lds_1
+lea_:
+	cmp al, 10001101b ;done tik mod reg r/m 
 dec_:
-	mov al, buff[si]
-	and al, 11110000b
-	cmp al, 01000000b ;dec2
-	JE 
-	cmp al, 11110000b ;dec1
-	JE
+	and al, 11111110b
+	cmp al, 11111110b ;dec1 done tik w mod 001 r/m poslinkis
+	JE dec_1
+	
+	and al, 11111000b
+	cmp al, 11110000b ;dec2 done, tik 
+	JE dec_2
 
 analize ENDP
 print_komanda PROC
@@ -131,8 +162,49 @@ sk0_9:
 	
 IsvestiHex ENDP
 reg_nustatymas PROC
-
+	mov al, buff[si]
+	and al, 0000111b
+	
+	
+	;opk reg
+	
+	
 RET
 reg_nustatymas ENDP
 
+sreg_nustatymas PROC
+;opk sreg opk
+	mov al, buff[si]
+	and al, 00011000b
+	
+	
+	
+RET
+sreg_nustatymas ENDP
+
+mod_nustatymas PROC
+	mov al, buff[si + 1]
+	and al, 11100000b
+;mod adresavimo baitas
+
+RET
+mod_nustatymas ENDP
+
+d_nustatymas PROC
+	
+	
+	RET
+d_nustatymas ENDP
+
+s_nustatymas PROC
+	
+	RET
+s_nustatymas ENDP
+	
+	
+w_nustatymas PROC
+
+
+	RET
+w_nustatymas ENDP
 ;https://docs.google.com/spreadsheets/d/1Y5cNmWNW3BiRY56nrGFinnCxZqVxTG4p6QLTUfnQBHE/edit?fbclid=IwY2xjawHGhMhleHRuA2FlbQIxMAABHRUuxRuzYHLs4mkp09I1RhvuitY7f4BVIIMFb6Hee0CL-dZguzGkDmgong_aem_Y45mWeQDSrH2U-tEo-KpNg&gid=2122611062#gid=2122611062
