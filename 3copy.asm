@@ -49,18 +49,35 @@ loope_print:
 	;grizimas i loopa
 pop_1:
 	call mod_nustatymas
-	
+	mov al, buff[si]
+	and al, 00111000b
+	cmp al, 00110000b
+	JNE ;kazkur
+	call r/m_nustatymas
+	;poslinkis
 pop_2:
 	call reg_nustatymas
-
+	;viskas
 pop_3:
 	call sreg_nustatymas
+	;viskas
 lds_1:
 	call mod_nustatymas
+	call reg_nustatymas
+	call r/m_nustatymas
+	;poslinkis 
 lea_1:
 	call mod_nustatymas
+	call reg_nustatymas
+	call r/m_nustatymas
+	;poslinkis 
 and_1:
-
+	call d_nustatymas
+	call w_nustatymas
+	call mod_nustatymas
+	call reg_nustatymas
+	call r/m_nustatymas
+	;poslinkis 
 and_2:
 
 and_3:
@@ -164,47 +181,106 @@ IsvestiHex ENDP
 reg_nustatymas PROC
 	mov al, buff[si]
 	and al, 0000111b
+	cmp al, 0000000b
+	;kazkas
+	cmp al, 0000001b
+	;kazkas
+	cmp al, 0000010b
+	;kazkas
+	cmp al, 0000011b
+	;kazkas
+	cmp al, 0000100b
+	;kazkas
+	cmp al, 0000101b
+	;kazkas
+	cmp al, 0000110b
+	;kazkas
+	cmp al, 0000111b
+	;kazkas
 	
-	
-	;opk reg
-	
-	
-RET
+	;opk reg	
+	RET
 reg_nustatymas ENDP
 
 sreg_nustatymas PROC
 ;opk sreg opk
 	mov al, buff[si]
 	and al, 00011000b
-	
-	
-	
-RET
+	cmp al, 00000000b
+	;kazkas
+	cmp al, 00001000b
+	;kazkas
+	cmp al, 00010000b
+	;kazkas
+	cmp al, 00011000b
+	;kazkas	
+
+	RET
 sreg_nustatymas ENDP
 
 mod_nustatymas PROC
 	mov al, buff[si + 1]
 	and al, 11100000b
+	cmp al, 01000000b
+	;kazkas
+	cmp al, 00000000b
+	;kazkas
+	cmp al, 10000000b
+	;kazkas
+	cmp al, 11000000b
+	;kazkas
 ;mod adresavimo baitas
 
 RET
 mod_nustatymas ENDP
 
 d_nustatymas PROC
-	
-	
+	mov al, buff[si]
+	and al, 00000010b
+	cmp al, 00000000b
+	;kazkas
+	cmp al, 00000010b
+	;kazkas	
 	RET
 d_nustatymas ENDP
 
-s_nustatymas PROC
-	
-	RET
-s_nustatymas ENDP
-	
 	
 w_nustatymas PROC
-
-
+	mov al, buff[si]
+	and al, 00000001b
+	cmp al, 00000000b
+	;kazkas
+	cmp al, 00000001b
+	;kazkas
 	RET
 w_nustatymas ENDP
+r/m_nustatymas PROC
+	mov al, buff[si]
+	and al, 00000111b
+	cmp al, 00000000b
+	;kazkue
+	cmp al, 00000001b
+	;kazkur
+	cmp al, 00000010b
+	;kazkur
+	cmp al, 00000011b
+	;kazkur
+	cmp al, 00000100b
+	;kazkur
+	cmp al, 00000101b
+	;kakzur
+	cmp al, 00000110b
+	;kazkur
+	cmp al, 00000111b
+	;kazkur
+r/m_nustatymas ENDP
+sw_nustatymas PROC
+	mov al, buff[si]
+	and al, 00000011b
+	cmp al, 00000001b
+	;kazkas
+	cmp al, 00000011b
+	;kazkas
+	RET
+sw_nustatymas ENDP
 ;https://docs.google.com/spreadsheets/d/1Y5cNmWNW3BiRY56nrGFinnCxZqVxTG4p6QLTUfnQBHE/edit?fbclid=IwY2xjawHGhMhleHRuA2FlbQIxMAABHRUuxRuzYHLs4mkp09I1RhvuitY7f4BVIIMFb6Hee0CL-dZguzGkDmgong_aem_Y45mWeQDSrH2U-tEo-KpNg&gid=2122611062#gid=2122611062
